@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel - Dashboard Industrial</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="dashboard.html">
+        <div class="brand-mark">IA</div>
+        <span>Inventário Automotivo</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link active" href="dashboard.html">Painel</a>
+        <a class="nav-link" href="armazem.html">Armazém</a>
+        <a class="nav-link" href="combinacao.html">Combinação</a>
+      </div>
+      <div class="nav-user">
+        <span id="user-name">Operador</span>
+        <a class="logout-btn" href="index.html">Sair</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">Painel Operacional</h1>
+        <p class="page-subtitle">Visão geral do inventário e atividades recentes</p>
+      </div>
+    </header>
+
+    <!-- Metricas -->
+    <section class="metrics-grid">
+      <div class="metric">
+        <div class="metric-icon">📦</div>
+        <div>
+          <div class="metric-label">Total de Peças</div>
+          <div class="metric-value" id="m-total">0</div>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon success">📊</div>
+        <div>
+          <div class="metric-label">Unidades em Estoque</div>
+          <div class="metric-value" id="m-qty">0</div>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon warn">⚠️</div>
+        <div>
+          <div class="metric-label">Estoque Crítico</div>
+          <div class="metric-value" id="m-critical">0</div>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="metric-icon danger">⛔</div>
+        <div>
+          <div class="metric-label">Em Falta</div>
+          <div class="metric-value" id="m-out">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atividades recentes -->
+    <section class="card">
+      <div class="card-header"><h2 class="card-title">Atividades Recentes</h2></div>
+      <div class="card-body" style="padding: 0;">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Descrição</th><th style="width:200px;">Data/Hora</th></tr>
+            </thead>
+            <tbody id="activities-body">
+              <tr><td colspan="2" class="empty">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Dashboard Industrial</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="auth-wrap">
+    <!-- Lado esquerdo: hero -->
+    <aside class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="brand" style="color:white; margin-bottom: 28px;">
+          <div class="brand-mark">IA</div>
+          <span>Inventário Automotivo</span>
+        </div>
+        <h1>Diagnóstico inteligente e controle total do seu estoque.</h1>
+        <p>Plataforma industrial para gestão de peças, compatibilidade de veículos e diagnóstico assistido.</p>
+        <div class="auth-features">
+          <div class="auth-feature"><div class="dot">✓</div><div>Inventário em tempo real com alertas de estoque crítico</div></div>
+          <div class="auth-feature"><div class="dot">✓</div><div>Diagnóstico por sintoma com sugestão de peça correta</div></div>
+          <div class="auth-feature"><div class="dot">✓</div><div>Tabela completa de compatibilidade entre veículos</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Lado direito: formulario -->
+    <main class="auth-form-side">
+      <div class="card auth-card">
+        <div class="card-body">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">Entrar</button>
+            <button class="auth-tab" data-tab="register">Cadastrar</button>
+          </div>
+
+          <div id="alert" class="alert" style="display:none;"></div>
+
+          <!-- Form Login -->
+          <form id="form-login">
+            <div class="field">
+              <label class="label" for="login-email">E-mail corporativo</label>
+              <input class="input" type="email" id="login-email" required placeholder="seu@empresa.com" />
+            </div>
+            <div class="field">
+              <label class="label" for="login-password">Senha</label>
+              <input class="input" type="password" id="login-password" required placeholder="••••••••" />
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Entrar no painel</button>
+            <p class="muted" style="margin-top:14px; text-align:center;">
+              Acesso restrito a operadores autorizados.
+            </p>
+          </form>
+
+          <!-- Form Cadastro -->
+          <form id="form-register" style="display:none;">
+            <div class="field">
+              <label class="label" for="reg-name">Nome completo</label>
+              <input class="input" type="text" id="reg-name" required placeholder="Ex.: João Silva" />
+            </div>
+            <div class="field">
+              <label class="label" for="reg-email">E-mail corporativo</label>
+              <input class="input" type="email" id="reg-email" required placeholder="seu@empresa.com" />
+            </div>
+            <div class="field">
+              <label class="label" for="reg-password">Senha</label>
+              <input class="input" type="password" id="reg-password" required minlength="6" placeholder="Mínimo 6 caracteres" />
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Criar conta</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/login.js"></script>
+</body>
+</html>

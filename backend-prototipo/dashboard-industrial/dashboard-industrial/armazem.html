@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Armazém - Dashboard Industrial</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="dashboard.html">
+        <div class="brand-mark">IA</div>
+        <span>Inventário Automotivo</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="dashboard.html">Painel</a>
+        <a class="nav-link active" href="armazem.html">Armazém</a>
+        <a class="nav-link" href="combinacao.html">Combinação</a>
+      </div>
+      <div class="nav-user">
+        <span id="user-name">Operador</span>
+        <a class="logout-btn" href="index.html">Sair</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">Armazém</h1>
+        <p class="page-subtitle">Gerencie peças metalúrgicas e eletrônicas</p>
+      </div>
+      <button class="btn btn-primary" id="btn-open-add">+ Adicionar Peça</button>
+    </header>
+
+    <div class="toolbar">
+      <input type="search" id="search" class="input toolbar-grow" placeholder="Buscar por nome ou marca..." />
+      <select id="filter-category" class="select">
+        <option value="Todas">Todas as categorias</option>
+        <option value="Metalurgica">Metalúrgica</option>
+        <option value="Eletronica">Eletrônica</option>
+      </select>
+    </div>
+
+    <section class="card">
+      <div class="card-body" style="padding: 0;">
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Peça</th>
+                <th>Categoria</th>
+                <th>Marca</th>
+                <th>Quantidade</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="parts-body">
+              <tr><td colspan="5" class="empty">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal: Adicionar Peca -->
+  <div class="modal-backdrop" id="modal-add">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Adicionar Nova Peça</h3>
+        <button class="modal-close" data-close>×</button>
+      </div>
+      <form id="form-add-part">
+        <div class="modal-body">
+          <div id="add-alert" class="alert alert-error" style="display:none;"></div>
+
+          <div class="field">
+            <label class="label" for="p-name">Nome da peça</label>
+            <input id="p-name" class="input" type="text" required placeholder="Ex.: Pastilha de Freio Dianteira" />
+          </div>
+          <div class="field">
+            <label class="label" for="p-category">Categoria</label>
+            <select id="p-category" class="select" required>
+              <option value="">Selecione...</option>
+              <option value="Metalurgica">Metalúrgica</option>
+              <option value="Eletronica">Eletrônica</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" for="p-brand">Marca</label>
+            <input id="p-brand" class="input" type="text" required placeholder="Ex.: Bosch" />
+          </div>
+          <div class="field">
+            <label class="label" for="p-quantity">Quantidade</label>
+            <input id="p-quantity" class="input" type="number" min="0" required value="0" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close>Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar peça</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/armazem.js"></script>
+</body>
+</html>

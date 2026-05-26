@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Combinação - Dashboard Industrial</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="dashboard.html">
+        <div class="brand-mark">IA</div>
+        <span>Inventário Automotivo</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-link" href="dashboard.html">Painel</a>
+        <a class="nav-link" href="armazem.html">Armazém</a>
+        <a class="nav-link active" href="combinacao.html">Combinação</a>
+      </div>
+      <div class="nav-user">
+        <span id="user-name">Operador</span>
+        <a class="logout-btn" href="index.html">Sair</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <header class="page-header">
+      <div>
+        <h1 class="page-title">Diagnóstico e Compatibilidade</h1>
+        <p class="page-subtitle">Descreva o sintoma para identificar a peça e ver veículos compatíveis</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="card-body">
+        <form id="form-diagnose">
+          <div class="field">
+            <label class="label" for="symptom">Sintoma do veículo</label>
+            <textarea id="symptom" class="textarea" placeholder="Ex.: barulho ao frear, luz da injeção acesa, carro não dá partida..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Diagnosticar</button>
+        </form>
+      </div>
+    </section>
+
+    <div id="result"></div>
+  </main>
+
+  <script src="js/combinacao.js"></script>
+</body>
+</html>

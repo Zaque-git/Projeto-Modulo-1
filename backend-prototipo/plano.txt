@@ -1,0 +1,8 @@
+PROJETO: SOFTWARE DE SUGESTAO DE MATERIAIS
+
+- Frameworks que vao ser utilizados:
+
+1. Flask ( API )
+2. SQLite ( banco de dados basicos para armazenar os materiais e as quantidades )
+3. Figma ( Criar um projeto basico para IHC do projeto )
+4. HTML AND CSS ( Projeto web )
