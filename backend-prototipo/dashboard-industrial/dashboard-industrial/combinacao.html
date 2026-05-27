@@ -25,27 +25,68 @@
     </div>
   </nav>
 
-  <main class="page">
+  <main class="page page-combinacao">
     <header class="page-header">
       <div>
-        <h1 class="page-title">Diagnóstico e Compatibilidade</h1>
-        <p class="page-subtitle">Descreva o sintoma para identificar a peça e ver veículos compatíveis</p>
+        <h1 class="page-title">Combinação - Assistente de Diagnóstico</h1>
+        <p class="page-subtitle">Sistema inteligente de compatibilidade e resolução de problemas</p>
       </div>
     </header>
 
-    <section class="card">
-      <div class="card-body">
-        <form id="form-diagnose">
-          <div class="field">
-            <label class="label" for="symptom">Sintoma do veículo</label>
-            <textarea id="symptom" class="textarea" placeholder="Ex.: barulho ao frear, luz da injeção acesa, carro não dá partida..." required></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Diagnosticar</button>
-        </form>
-      </div>
-    </section>
+    <div class="combinacao-container">
+      
+      <section class="card combinacao-form-card">
+        <div class="card-header">
+          <h2 class="card-title">Identificação do Problema</h2>
+        </div>
+        <div class="card-body">
+          <form id="form-diagnose">
+            <div class="field">
+              <label class="label" for="part-name">Peça Desejada</label>
+              <input type="text" id="part-name" class="input" placeholder="Ex: Pastilha de Freio" required />
+            </div>
+            
+            <div class="field">
+              <label class="label" for="part-brand">Marca da Peça</label>
+              <input type="text" id="part-brand" class="input" placeholder="Ex: Bosch" required />
+            </div>
 
-    <div id="result"></div>
+            <div class="field">
+              <label class="label" for="car-model">Marca/Modelo do Carro</label>
+              <input type="text" id="car-model" class="input" placeholder="Ex: Volkswagen Gol" required />
+            </div>
+
+            <div class="field">
+              <label class="label" for="car-year">Ano</label>
+              <input type="text" id="car-year" class="input" placeholder="Ex: 2020" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-analyze">
+              <svg class="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              Analisar Combinação
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <div id="result" class="combinacao-result-side">
+        <div class="card empty-state-card">
+          <div class="card-body empty">
+            <div class="search-illustration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <p>Selecione um problema e informe o veículo para ver o diagnóstico</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <script src="js/combinacao.js"></script>
