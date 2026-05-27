@@ -40,25 +40,30 @@
           <h2 class="card-title">Identificação do Problema</h2>
         </div>
         <div class="card-body">
-          <form id="form-diagnose">
-            <div class="field">
+          <form id="form-diagnose" autocomplete="off">
+            
+            <div class="field" style="position: relative;">
               <label class="label" for="part-name">Peça Desejada</label>
               <input type="text" id="part-name" class="input" placeholder="Ex: Pastilha de Freio" required />
+              <div id="part-suggestions" class="autocomplete-suggestions"></div>
             </div>
             
-            <div class="field">
+            <div class="field" style="position: relative;">
               <label class="label" for="part-brand">Marca da Peça</label>
               <input type="text" id="part-brand" class="input" placeholder="Ex: Bosch" required />
+              <div id="brand-suggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <div class="field">
+            <div class="field" style="position: relative;">
               <label class="label" for="car-model">Marca/Modelo do Carro</label>
               <input type="text" id="car-model" class="input" placeholder="Ex: Volkswagen Gol" required />
+              <div id="car-suggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <div class="field">
+            <div class="field" style="position: relative;">
               <label class="label" for="car-year">Ano</label>
               <input type="text" id="car-year" class="input" placeholder="Ex: 2020" required />
+              <div id="year-suggestions" class="autocomplete-suggestions"></div>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block btn-analyze">
