@@ -1,0 +1,242 @@
+/* ============================================================
+   auth-enhance.css
+   Inclua APÓS o styles.css:
+     <link rel="stylesheet" href="css/styles.css" />
+     <link rel="stylesheet" href="css/auth-enhance.css" />
+   Afeta APENAS a tela de login. Nenhuma outra tela é tocada.
+   ============================================================ */
+
+/* Fundo da tela inteira: gradiente sutil + textura industrial */
+body:has(.auth-wrap) {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 85% 110%, rgba(30, 64, 175, .18), transparent 60%),
+    radial-gradient(900px 500px at -10% -10%, rgba(59, 130, 246, .15), transparent 55%),
+    linear-gradient(135deg, #eef2f8 0%, #f1f5f9 50%, #e2e8f0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Container central com mais presença */
+.auth-wrap {
+  max-width: 980px !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 30px 60px -20px rgba(15, 23, 42, .35),
+    0 0 0 1px rgba(255, 255, 255, .6) inset !important;
+  overflow: hidden;
+  animation: auth-in .5s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes auth-in {
+  from { opacity: 0; transform: translateY(16px) scale(.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- LADO ESQUERDO (hero) ---------- */
+.auth-hero {
+  background:
+    radial-gradient(600px 400px at 20% 0%, rgba(96, 165, 250, .35), transparent 60%),
+    radial-gradient(500px 350px at 90% 100%, rgba(30, 58, 138, .55), transparent 60%),
+    linear-gradient(135deg, #1e3a8a 0%, #1e40af 45%, #2563eb 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grid industrial sutil de fundo */
+.auth-hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at 50% 40%, black 30%, transparent 75%);
+  pointer-events: none;
+}
+
+/* Orbe luminoso animado */
+.auth-hero::after {
+  content: "";
+  position: absolute;
+  width: 320px; height: 320px;
+  right: -80px; bottom: -80px;
+  background: radial-gradient(circle, rgba(147, 197, 253, .45), transparent 65%);
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: float 8s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-20px, -30px); }
+}
+
+.auth-hero-content { position: relative; z-index: 1; }
+
+.auth-hero h1 {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+  margin: 0;
+  background: linear-gradient(180deg, #ffffff 0%, #dbeafe 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.auth-hero p {
+  color: #c7dbff !important;
+  font-size: 15px;
+  margin-top: 14px;
+}
+
+/* Brand mark no hero com brilho */
+.auth-hero .brand-mark {
+  box-shadow: 0 8px 24px -6px rgba(96, 165, 250, .8);
+  background: linear-gradient(135deg, #60a5fa, #2563eb) !important;
+}
+
+/* Features com check estilizado */
+.auth-features { gap: 16px !important; margin-top: 28px; }
+.auth-feature {
+  align-items: center !important;
+  color: #e0ecff;
+  transition: transform .2s ease;
+}
+.auth-feature:hover { transform: translateX(4px); }
+.auth-feature .dot {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .12) !important;
+  border: 1px solid rgba(255, 255, 255, .25);
+  color: #93c5fd !important;
+  display: grid; place-items: center;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+  flex-shrink: 0;
+}
+
+/* ---------- LADO DIREITO (formulário) ---------- */
+.auth-form-side {
+  padding: 56px 48px !important;
+  background: #ffffff;
+}
+
+/* Tabs com pill animada */
+.auth-tabs {
+  position: relative;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  display: flex !important;
+  border-bottom: 1px solid var(--border) !important;
+  margin-bottom: 24px;
+}
+.auth-tab {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  padding: 10px 16px !important;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 7px;
+  border-bottom: 0 !important;
+  transition: all .2s ease;
+}
+.auth-tab:hover { color: var(--slate); }
+.auth-tab.active {
+  background: #ffffff !important;
+  color: var(--primary) !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, .08);
+  border-bottom-color: transparent !important;
+}
+
+/* Card transparente — já estamos no lado branco */
+.auth-card {
+  max-width: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.auth-card .card-body { padding: 0 !important; }
+
+/* Campos com microinteração */
+.auth-form-side .field { margin-bottom: 18px; }
+.auth-form-side .label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate);
+  letter-spacing: .1px;
+}
+.auth-form-side .input {
+  padding: 12px 14px !important;
+  border-radius: 10px !important;
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  font-size: 14.5px;
+  transition: all .2s ease;
+}
+.auth-form-side .input:hover { border-color: #cbd5e1 !important; }
+.auth-form-side .input:focus {
+  background: #ffffff !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px rgba(30, 64, 175, .12) !important;
+  transform: translateY(-1px);
+}
+
+/* Botão primário com gradiente + brilho */
+.auth-form-side .btn-primary {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%) !important;
+  padding: 13px 18px !important;
+  border-radius: 10px !important;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  box-shadow: 0 8px 20px -8px rgba(30, 64, 175, .6);
+  position: relative;
+  overflow: hidden;
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  margin-top: 6px;
+}
+.auth-form-side .btn-primary::before {
+  content: "";
+  position: absolute; top: 0; left: -120%;
+  width: 80%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
+  transition: left .6s ease;
+}
+.auth-form-side .btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 12px 24px -8px rgba(30, 64, 175, .7);
+}
+.auth-form-side .btn-primary:hover::before { left: 120%; }
+.auth-form-side .btn-primary:active { transform: translateY(0); }
+
+/* Texto auxiliar */
+.auth-form-side .muted {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* Alerta mais elegante */
+.auth-form-side .alert {
+  border-radius: 10px;
+  font-weight: 500;
+  animation: alert-in .25s ease-out;
+}
+@keyframes alert-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+  .auth-wrap { max-width: 480px !important; }
+  .auth-hero { padding: 36px 28px !important; }
+  .auth-hero h1 { font-size: 26px; }
+  .auth-form-side { padding: 36px 28px !important; }
+}
