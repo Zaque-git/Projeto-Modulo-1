@@ -16,6 +16,9 @@
                "brand":"...", "quantity": 10 }
        resposta esperada: { "ok": true, "id": 99 }
 
+     DELETE /api/parts/<id>
+       resposta esperada: { "ok": true }
+
    Sugestao de schema SQLite:
      CREATE TABLE parts (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +46,7 @@ let MOCK_PARTS = [
   { id:1, name:"Pastilha de Freio Dianteira", category:"Metalurgica", brand:"Bosch",  quantity:24 },
   { id:2, name:"Disco de Freio Ventilado",    category:"Metalurgica", brand:"Fremax", quantity:8  },
   { id:3, name:"Sensor de Oxigênio",          category:"Eletronica",  brand:"NGK",    quantity:0  },
-  { id:4, name:"Bateria 60Ah",                category:"Eletronica",  brand:"Moura",  quantity:5  },
+  { id:4, name:"Bateria 60Ah v12",            category:"Eletronica",  brand:"Moura",  quantity:5  },
   { id:5, name:"Filtro de Óleo",              category:"Metalurgica", brand:"Mann",   quantity:42 },
   { id:6, name:"Módulo de Ignição",           category:"Eletronica",  brand:"Delphi", quantity:2  },
 ];
@@ -85,7 +88,7 @@ function categoryBadge(cat) {
 
 function render(parts) {
   if (!parts.length) {
-    tbody.innerHTML = `<tr><td colspan="5" class="empty">Nenhuma peça encontrada.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty">Nenhuma peça encontrada.</td></tr>`;
     return;
   }
   tbody.innerHTML = parts.map(p => `
@@ -95,8 +98,43 @@ function render(parts) {
       <td>${escapeHtml(p.brand)}</td>
       <td>${p.quantity}</td>
       <td>${statusBadge(p.quantity)}</td>
+      <td style="text-align: center; padding: 4px 0;">
+        <button 
+          class="delete-action-btn" 
+          style="background: transparent; border: none; cursor: pointer; padding: 6px; color: #64748b; transition: color 0.2s ease; display: inline-flex; align-items: center; justify-content: center;" 
+          title="Excluir peça"
+          onmouseover="this.style.color='var(--danger)'" 
+          onmouseout="this.style.color='#64748b'"
+          onclick="deletePart(${p.id}, '${escapeHtml(p.name)}')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
+      </td>
     </tr>
   `).join("");
+}
+
+// Função para apagar o item com caixinha de confirmação nativa do navegador
+async function deletePart(id, name) {
+  const confirmDelete = confirm(`Tem certeza que deseja excluir a peça "${name}" do armazém?`);
+  
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`/api/parts/${id}`, {
+      method: "DELETE"
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error("Falha ao deletar no servidor.");
+  } catch (err) {
+    MOCK_PARTS = MOCK_PARTS.filter(p => p.id !== id);
+  }
+
+  loadParts();
 }
 
 function escapeHtml(s) {
@@ -146,7 +184,6 @@ formAdd.addEventListener("submit", async (e) => {
     const data = await res.json().catch(() => ({}));
     if (!res.ok || !data.ok) throw new Error(data.error || "Falha ao salvar.");
   } catch (err) {
-    // Sem backend? adiciona no mock local
     if (!usingMock && err.message && !err.message.includes("Failed")) {
       addAlert.textContent = err.message;
       addAlert.style.display = "block";
