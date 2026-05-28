@@ -8,7 +8,8 @@ document.getElementById("user-name").textContent =
 const form = document.getElementById("form-diagnose");
 const result = document.getElementById("result");
 
-// Simulando a Base de Dados do seu Armazém para Autocompletar
+// Simulando a Base de Dados do seu Armazém. Quando criar seu Back-End, 
+// o fetch enviará requisições e receberá uma estrutura similar a esta.
 const ARMAZEM_DATABASE = [
   {
     id: 1,
@@ -88,6 +89,7 @@ function setupAutocomplete(inputId, suggestionId, type) {
     let matches = [];
 
     if (type === "part") {
+      // Procura peças cujo nome contenha o termo digitado
       matches = ARMAZEM_DATABASE.filter(item => normalize(item.name).includes(text));
       
       if (matches.length > 0) {
@@ -105,9 +107,7 @@ function setupAutocomplete(inputId, suggestionId, type) {
           
           div.addEventListener("click", () => {
             input.value = item.name;
-            document.getElementById("part-brand").value = item.brand; 
             suggestionBox.style.display = "none";
-            document.getElementById("part-brand").dispatchEvent(new Event('input'));
           });
           suggestionBox.appendChild(div);
         });
@@ -117,6 +117,7 @@ function setupAutocomplete(inputId, suggestionId, type) {
     } 
     
     else if (type === "brand") {
+      // Extrai marcas únicas da lista de peças
       const brands = [...new Set(ARMAZEM_DATABASE.map(item => item.brand))];
       matches = brands.filter(b => normalize(b).includes(text));
       
@@ -138,23 +139,25 @@ function setupAutocomplete(inputId, suggestionId, type) {
     } 
     
     else if (type === "car") {
+      // Coleta todas as combinações únicas de Marca/Modelo de carro das peças homologadas
       const carList = [];
       ARMAZEM_DATABASE.forEach(p => p.compatible_cars.forEach(c => {
-        if (!carList.some(el => el.brand === c.brand && el.model === c.model)) {
-          carList.push({ brand: c.brand, model: c.model });
+        const fullName = `${c.brand} ${c.model}`;
+        if (!carList.includes(fullName)) {
+          carList.push(fullName);
         }
       }));
       
-      matches = carList.filter(c => normalize(`${c.brand} ${c.model}`).includes(text));
+      matches = carList.filter(car => normalize(car).includes(text));
       
       if (matches.length > 0) {
         suggestionBox.style.display = "block";
         matches.forEach(car => {
           const div = document.createElement("div");
           div.className = "suggestion-item";
-          div.innerText = `${car.brand} ${car.model}`;
+          div.innerText = car;
           div.addEventListener("click", () => {
-            input.value = `${car.brand} ${car.model}`;
+            input.value = car;
             suggestionBox.style.display = "none";
           });
           suggestionBox.appendChild(div);
@@ -165,8 +168,9 @@ function setupAutocomplete(inputId, suggestionId, type) {
     } 
     
     else if (type === "year") {
+      // Coleta anos cadastrados nas compatibilidades
       const years = [];
-      ARMAZEM_DATABASE.forEach(p => p.compatible_cars.forEach(c => years.push(c.year)));
+      ARMAZEM_DATABASE.forEach(p => p.compatible_cars.forEach(c => years.push(String(c.year))));
       const uniqueYears = [...new Set(years)];
       
       matches = uniqueYears.filter(y => normalize(y).includes(text));
@@ -189,6 +193,7 @@ function setupAutocomplete(inputId, suggestionId, type) {
     }
   });
 
+  // Fecha as caixas de sugestões se o usuário clicar fora do input
   document.addEventListener("click", (e) => {
     if (e.target !== input) {
       suggestionBox.style.display = "none";
@@ -196,13 +201,14 @@ function setupAutocomplete(inputId, suggestionId, type) {
   });
 }
 
+// Ativando autocomplete individual e desacoplado para cada campo
 setupAutocomplete("part-name", "part-suggestions", "part");
 setupAutocomplete("part-brand", "brand-suggestions", "brand");
 setupAutocomplete("car-model", "car-suggestions", "car");
 setupAutocomplete("car-year", "year-suggestions", "year");
 
 
-// --- SUBMISSÃO E ANÁLISE DE COMPATIBILIDADE ---
+// --- SUBMISSÃO E ANÁLISE DE COMPATIBILIDADE FLEXÍVEL (CAMPOS OPCIONAIS) ---
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -213,9 +219,10 @@ form.addEventListener("submit", async (e) => {
   const carYear = document.getElementById("car-year").value;
 
   result.innerHTML = `
-    <div class="card"><div class="card-body empty">Analisando compatibilidade da combinação...</div></div>
+    <div class="card"><div class="card-body empty">Analisando dados do armazém...</div></div>
   `;
 
+  // Esta chamada de API já está pronta estruturalmente para receber seu back-end manual no futuro
   let data;
   try {
     const res = await fetch("/api/diagnose", {
@@ -226,101 +233,126 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error("offline");
     data = await res.json();
   } catch {
-    const foundPart = ARMAZEM_DATABASE.find(p => 
-      normalize(p.name) === normalize(partName) && 
-      normalize(p.brand) === normalize(partBrand)
-    );
+    // Algoritmo local inteligente que filtra cumulativamente apenas o que for digitado
+    let filteredParts = ARMAZEM_DATABASE;
 
-    if (foundPart) {
-      const isCompatible = foundPart.compatible_cars.some(c => 
-        normalize(`${c.brand} ${c.model}`) === normalize(carModel) && 
-        c.year === carYear
-      );
-
-      data = {
-        found: true,
-        isCompatible: isCompatible,
-        available: foundPart.available,
-        part: foundPart,
-        compatible_cars: foundPart.compatible_cars
-      };
-    } else {
-      data = { found: false };
+    // Se digitou Peça
+    if (partName.trim() !== "") {
+      filteredParts = filteredParts.filter(p => normalize(p.name).includes(normalize(partName)));
     }
+
+    // Se digitou Marca
+    if (partBrand.trim() !== "") {
+      filteredParts = filteredParts.filter(p => normalize(p.brand).includes(normalize(partBrand)));
+    }
+
+    // Se digitou Carro/Modelo
+    if (carModel.trim() !== "") {
+      filteredParts = filteredParts.filter(p => 
+        p.compatible_cars.some(c => normalize(`${c.brand} ${c.model}`).includes(normalize(carModel)))
+      );
+    }
+
+    // Se digitou Ano
+    if (carYear.trim() !== "") {
+      filteredParts = filteredParts.filter(p => 
+        p.compatible_cars.some(c => normalize(c.year) === normalize(carYear))
+      );
+    }
+
+    data = {
+      found: filteredParts.length > 0,
+      results: filteredParts
+    };
   }
 
-  renderResult(data);
+  renderResults(data);
 });
 
-function renderResult(data) {
-  if (!data.found) {
+function renderResults(data) {
+  if (!data.found || !data.results || data.results.length === 0) {
     result.innerHTML = `
       <div class="card">
         <div class="card-body empty">
-          Nenhuma combinação exata pôde ser processada.<br>
-          Certifique-se de escolher itens sugeridos válidos do Armazém.
+          Nenhuma peça ou compatibilidade correspondente foi encontrada para as informações digitadas.
         </div>
       </div>`;
     return;
   }
 
-  const p = data.part;
-  const cars = (data.compatible_cars || [])
-    .map(c => `<span class="badge badge-slate">${escapeHtml(c.brand)} ${escapeHtml(c.model)} (${c.year})</span>`)
-    .join("");
+  result.innerHTML = "";
 
-  if (data.available) {
-    result.innerHTML = `
-      <div class="result-card" style="margin-top: 0;">
-        <div class="result-header">
-          <div>
-            <h3 class="result-title">${escapeHtml(p.name)}</h3>
-            <p class="muted" style="margin:4px 0 0;">
-              ${data.isCompatible ? "🟢 Peça 100% compatível com o veículo e ano informados!" : "❌ Atenção: Esta peça NÃO é compatível com o modelo digitado."}
-            </p>
-          </div>
-          <span class="badge badge-ok">Disponível (${p.quantity} un.)</span>
-        </div>
-        <div class="result-grid">
-          <div><div class="label">Marca da Peça</div><div class="value">${escapeHtml(p.brand)}</div></div>
-          <div><div class="label">Categoria</div><div class="value">${p.category === "Eletronica" ? "Eletrônica" : "Metalúrgica"}</div></div>
-          <div><div class="label">Validação Técnica</div><div class="value">${data.isCompatible ? "Liberado" : "Incompatível"}</div></div>
-        </div>
-        <div class="compat-section">
-          <h4>Outros carros homologados para esta peça</h4>
-          <div class="compat-list">${cars || '<span class="muted">Nenhum registro de compatibilidade.</span>'}</div>
-        </div>
-      </div>`;
-  } else {
-    result.innerHTML = `
-      <div class="result-card danger" style="margin-top: 0;">
-        <div class="result-header">
-          <div>
-            <h3 class="result-title" style="color:var(--danger);">${escapeHtml(p.name)}</h3>
-            <p class="muted" style="margin:4px 0 0;">⚠️ Peça correta para a busca, porém está esgotada no armazém.</p>
-          </div>
-          <span class="badge badge-danger">Indisponível</span>
-        </div>
-        <div class="compat-section">
-          <h4>Outros carros compatíveis</h4>
-          <div class="compat-list">${cars}</div>
-        </div>
-        <div style="margin-top:18px;">
-          <button class="btn btn-danger" id="btn-purchase">Emitir Pedido de Compra Automatizado</button>
-        </div>
-      </div>`;
+  // Renderiza dinamicamente todas as peças encontradas no filtro parcial, listando seus carros
+  data.results.forEach(p => {
+    const cars = p.compatible_cars
+      .map(c => `<span class="badge badge-slate">${escapeHtml(c.brand)} ${escapeHtml(c.model)} (${c.year})</span>`)
+      .join("");
 
-    document.getElementById("btn-purchase").addEventListener("click", async () => {
+    const resultBox = document.createElement("div");
+    resultBox.style.marginBottom = "20px";
+
+    if (p.available) {
+      resultBox.innerHTML = `
+        <div class="result-card" style="margin-top: 0;">
+          <div class="result-header">
+            <div>
+              <h3 class="result-title">${escapeHtml(p.name)}</h3>
+              <p class="muted" style="margin:4px 0 0;">🟢 Peça localizada no sistema com especificações compatíveis.</p>
+            </div>
+            <span class="badge badge-ok">Disponível (${p.quantity} un.)</span>
+          </div>
+          <div class="result-grid">
+            <div><div class="label">Marca da Peça</div><div class="value">${escapeHtml(p.brand)}</div></div>
+            <div><div class="label">Categoria</div><div class="value">${p.category === "Eletronica" ? "Eletrônica" : "Metalúrgica"}</div></div>
+            <div><div class="label">Status do Estoque</div><div class="value">Liberado</div></div>
+          </div>
+          <div class="compat-section">
+            <h4>Veículos Homologados / Compatíveis</h4>
+            <div class="compat-list">${cars || '<span class="muted">Nenhum registro de compatibilidade.</span>'}</div>
+          </div>
+        </div>`;
+    } else {
+      resultBox.innerHTML = `
+        <div class="result-card danger" style="margin-top: 0;">
+          <div class="result-header">
+            <div>
+              <h3 class="result-title" style="color:var(--danger);">${escapeHtml(p.name)}</h3>
+              <p class="muted" style="margin:4px 0 0;">⚠️ Peça correspondente encontrada, porém encontra-se esgotada no armazém.</p>
+            </div>
+            <span class="badge badge-danger">Indisponível</span>
+          </div>
+          <div class="result-grid">
+            <div><div class="label">Marca da Peça</div><div class="value">${escapeHtml(p.brand)}</div></div>
+            <div><div class="label">Categoria</div><div class="value">${p.category === "Eletronica" ? "Eletrônica" : "Metalúrgica"}</div></div>
+            <div><div class="label">Status</div><div class="value" style="color:var(--danger)">Esgotado</div></div>
+          </div>
+          <div class="compat-section">
+            <h4>Veículos Homologados / Compatíveis</h4>
+            <div class="compat-list">${cars}</div>
+          </div>
+          <div style="margin-top:18px;">
+            <button class="btn btn-danger btn-purchase-action" data-part="${escapeHtml(p.name)}" data-id="${p.id}">Emitir Pedido de Compra Automatizado</button>
+          </div>
+        </div>`;
+    }
+    result.appendChild(resultBox);
+  });
+
+  // Eventos para botões de compra automatizados criados em tempo de execução
+  document.querySelectorAll(".btn-purchase-action").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const partId = e.target.getAttribute("data-id");
+      const partName = e.target.getAttribute("data-part");
       try {
         await fetch("/api/purchase-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ part_id: p.id }),
+          body: JSON.stringify({ part_id: partId }),
         });
       } catch {}
-      alert("Ordem de compra automatizada enviada para: " + p.name);
+      alert("Ordem de compra automatizada enviada para: " + partName);
     });
-  }
+  });
 }
 
 function escapeHtml(s) {

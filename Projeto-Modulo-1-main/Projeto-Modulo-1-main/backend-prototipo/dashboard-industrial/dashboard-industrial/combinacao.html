@@ -36,42 +36,39 @@
     <div class="combinacao-container">
       
       <section class="card combinacao-form-card">
-        <div class="card-header">
-          <h2 class="card-title">Identificação do Problema</h2>
-        </div>
         <div class="card-body">
-          <form id="form-diagnose" autocomplete="off">
+          <form id="form-diagnose" autocomplete="off" class="form-horizontal">
             
-            <div class="field" style="position: relative;">
+            <div class="field field-horizontal" style="position: relative;">
               <label class="label" for="part-name">Peça Desejada</label>
-              <input type="text" id="part-name" class="input" placeholder="Ex: Pastilha de Freio" required />
+              <input type="text" id="part-name" class="input" placeholder="Ex: Pastilha de Freio" />
               <div id="part-suggestions" class="autocomplete-suggestions"></div>
             </div>
             
-            <div class="field" style="position: relative;">
+            <div class="field field-horizontal" style="position: relative;">
               <label class="label" for="part-brand">Marca da Peça</label>
-              <input type="text" id="part-brand" class="input" placeholder="Ex: Bosch" required />
+              <input type="text" id="part-brand" class="input" placeholder="Ex: Bosch" />
               <div id="brand-suggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <div class="field" style="position: relative;">
+            <div class="field field-horizontal" style="position: relative;">
               <label class="label" for="car-model">Marca/Modelo do Carro</label>
-              <input type="text" id="car-model" class="input" placeholder="Ex: Volkswagen Gol" required />
+              <input type="text" id="car-model" class="input" placeholder="Ex: Volkswagen Gol" />
               <div id="car-suggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <div class="field" style="position: relative;">
+            <div class="field field-horizontal" style="position: relative;">
               <label class="label" for="car-year">Ano</label>
-              <input type="text" id="car-year" class="input" placeholder="Ex: 2020" required />
+              <input type="text" id="car-year" class="input" placeholder="Ex: 2020" />
               <div id="year-suggestions" class="autocomplete-suggestions"></div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block btn-analyze">
+            <button type="submit" class="btn btn-primary btn-analyze">
               <svg class="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              Analisar Combinação
+              Analisar
             </button>
           </form>
         </div>
@@ -86,7 +83,7 @@
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
             </div>
-            <p>Selecione um problema e informe o veículo para ver o diagnóstico</p>
+            <p>Insira qualquer informação acima para realizar uma busca flexível no armazém</p>
           </div>
         </div>
       </div>
